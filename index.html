@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <title>mec&#39;s blog</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta property="og:type" content="website">
+<meta property="og:title" content="mec&#39;s blog">
+<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:site_name" content="mec&#39;s blog">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="mec&#39;s blog">
+  
+    <link rel="alternate" href="/atom.xml" title="mec&#39;s blog" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/favicon.png">
+  
+  
+    <link href="//fonts.googleapis.com/css?family=Source+Code+Pro" rel="stylesheet" type="text/css">
+  
+  <link rel="stylesheet" href="/css/style.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div id="wrap">
+      <header id="header">
+  <div id="banner"></div>
+  <div id="header-outer" class="outer">
+    <div id="header-title" class="inner">
+      <h1 id="logo-wrap">
+        <a href="/" id="logo">mec&#39;s blog</a>
+      </h1>
+      
+    </div>
+    <div id="header-inner" class="inner">
+      <nav id="main-nav">
+        <a id="main-nav-toggle" class="nav-icon"></a>
+        
+          <a class="main-nav-link" href="/">Home</a>
+        
+          <a class="main-nav-link" href="/archives">Archives</a>
+        
+      </nav>
+      <nav id="sub-nav">
+        
+          <a id="nav-rss-link" class="nav-icon" href="/atom.xml" title="RSS Feed"></a>
+        
+        <a id="nav-search-btn" class="nav-icon" title="Search"></a>
+      </nav>
+      <div id="search-form-wrap">
+        <form action="//google.com/search" method="get" accept-charset="UTF-8" class="search-form"><input type="search" name="q" class="search-form-input" placeholder="Search"><button type="submit" class="search-form-submit">&#xF002;</button><input type="hidden" name="sitesearch" value="http://yoursite.com"></form>
+      </div>
+    </div>
+  </div>
+</header>
+      <div class="outer">
+        <section id="main">
+  
+    <article id="page-2017-03-07-字符编码与Python2" class="article article-type-page" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/11/06/2017-03-07-字符编码与Python2/" class="article-date">
+  <time datetime="2017-11-06T15:23:15.000Z" itemprop="datePublished">2017-11-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/tech/">tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/06/2017-03-07-字符编码与Python2/">字符编码与Python2</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>================</p>
+<h2 id="一、编码发展史"><a href="#一、编码发展史" class="headerlink" title="一、编码发展史"></a>一、编码发展史</h2><h3 id="1-ASCII"><a href="#1-ASCII" class="headerlink" title="1. ASCII"></a>1. ASCII</h3><ul>
+<li>1967年推出</li>
+<li>128字符，7bits</li>
+<li>33个不可显示，95个可显示</li>
+</ul>
+<h3 id="2-Latin-1-ISO-8859-1"><a href="#2-Latin-1-ISO-8859-1" class="headerlink" title="2. Latin-1(ISO-8859-1)"></a>2. Latin-1(ISO-8859-1)</h3><ul>
+<li>单字节编码，256个字符</li>
+<li>兼容ASCII</li>
+</ul>
+<h3 id="3-unicode-utf-8-utf-16-utf-32"><a href="#3-unicode-utf-8-utf-16-utf-32" class="headerlink" title="3. unicode(utf-8, utf-16, utf-32)"></a>3. unicode(utf-8, utf-16, utf-32)</h3><ul>
+<li>为每一个字符而非字形定义唯一的代码</li>
+<li>表示方法，U+十六进制数，如“<strong>赞</strong>”-&gt;<code>U+8D5E</code></li>
+</ul>
+<h2 id="二、utf-8"><a href="#二、utf-8" class="headerlink" title="二、utf-8"></a>二、utf-8</h2><p><strong>UTF-8是Unicode的实现方式之一</strong></p>
+<h3 id="特点"><a href="#特点" class="headerlink" title="特点"></a>特点</h3><ul>
+<li>变长编码(1-4个字节)</li>
+<li>兼容ASCII</li>
+<li>易于进行网络传输和存储</li>
+</ul>
+<h2 id="编码规则"><a href="#编码规则" class="headerlink" title="编码规则"></a>编码规则</h2><p>1）对于单字节的符号，字节的第一位设为0，后面7位为这个符号的unicode码。因此对于英语字母，UTF-8编码和ASCII码是相同的。</p>
+<p>2）对于n字节的符号（n&gt;1），第一个字节的前n位都设为1，第n+1位设为0，后面字节的前两位一律设为10。剩下的没有提及的二进制位，全部为这个符号的unicode码。</p>
+<p><img src="/images/posts/2017-03-07/utf-8.jpeg" alt="utf-8"></p>
+<p>如何对一个字符进行utf-8编码？</p>
+<ol>
+<li>从上表查出需要的编码字节数</li>
+<li>按照上表确定各字节的高位数字</li>
+<li>填充“x”位，使用该字符unicode的character number(code point)，规则是从最低位开始，依次往前填充，直到所有的x都被替换为止</li>
+</ol>
+<h3 id="例子"><a href="#例子" class="headerlink" title="例子"></a>例子</h3><p>“赞”-&gt;<code>U+8D5E</code>-&gt;需要3个字节编码-&gt;<code>1110xxxx 10xxxxxx 10xxxxxx</code>-&gt;<code>11101000 10110101 10011110</code>-&gt;<code>0xE8B59E</code></p>
+<h2 id="三、Python2中的编码"><a href="#三、Python2中的编码" class="headerlink" title="三、Python2中的编码"></a>三、Python2中的编码</h2><ol>
+<li>编码和解码的概念</li>
+</ol>
+<ul>
+<li>编码(encode)：字符-&gt;字节，为了存储和传输</li>
+<li>解码(decode)：字节-&gt;字符，为了显示和阅读</li>
+</ul>
+<ol>
+<li>Python如何看待字符串</li>
+</ol>
+<p>Python字符串分为两种：<code>str</code>和<code>unicode</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">In [<span class="number">3</span>]: s1 = <span class="string">'赞'</span></div><div class="line">In [<span class="number">4</span>]: s2 = <span class="string">u'赞'</span></div><div class="line">    </div><div class="line">In [<span class="number">5</span>]: s1</div><div class="line">Out[<span class="number">5</span>]: <span class="string">'\xe8\xb5\x9e'</span></div><div class="line">In [<span class="number">6</span>]: s2</div><div class="line">Out[<span class="number">6</span>]: <span class="string">u'\u8d5e'</span></div><div class="line">    </div><div class="line">In [<span class="number">7</span>]: type(s1)</div><div class="line">Out[<span class="number">7</span>]: str</div><div class="line">In [<span class="number">8</span>]: type(s2)</div><div class="line">Out[<span class="number">8</span>]: unicode</div></pre></td></tr></table></figure>
+<ol>
+<li>Python解释器如何解析文件</li>
+</ol>
+<p>Python interpreter 根据声明的encoding去解析这个文件</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">^[ \t\v]*<span class="comment">#.*?coding[:=][ \t]*([-_.a-zA-Z0-9]+)</span></div></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="comment"># -*- coding: latin-1 -*-</span></div><div class="line"><span class="keyword">import</span> os, sys</div><div class="line">...</div><div class="line"></div><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="comment"># -*- coding: iso-8859-15 -*-</span></div><div class="line"><span class="keyword">import</span> os, sys</div><div class="line">...</div><div class="line"></div><div class="line"><span class="comment">#!/usr/bin/python</span></div><div class="line"><span class="comment"># -*- coding: ascii -*-</span></div><div class="line"><span class="keyword">import</span> os, sys</div></pre></td></tr></table></figure>
+<ol>
+<li>解决方案</li>
+</ol>
+<ul>
+<li>搞清楚不同的编码</li>
+</ul>
+<p>系统环境、网络传输、文件、Python解释器、第三方库</p>
+<ul>
+<li>str本质上是一串二进制数据，unicode是字符</li>
+</ul>
+<blockquote>
+<p>encoding always takes a Unicode string and returns a bytes sequence, and decoding always takes a bytes sequence and returns a Unicode string”.</p>
+</blockquote>
+<ul>
+<li><p>unicode只存在于内部</p>
+</li>
+<li><p>隐式转码问题</p>
+<p>print语句</p>
+<p>读写文件(使用codecs.open)，第三方库chardet.detect</p>
+<p>字符串操作(+、==)</p>
+<p><code>sys.setdefaultencoding</code>的作用范围(慎用)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line"></div><div class="line"><span class="comment"># 三行代码，改变一切</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">welcome_message</span><span class="params">(byte_string)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">return</span> <span class="string">u"%s runs your business"</span> % byte_string</div><div class="line">    <span class="keyword">except</span> UnicodeError:</div><div class="line">        <span class="keyword">return</span> <span class="string">u"%s runs your business"</span>%</div><div class="line">        unicode(byte_string,encoding=detect_encoding(byte_string))</div><div class="line"> </div><div class="line">print(welcome_message(<span class="string">u"Angstrom (Å®)"</span>.encode(<span class="string">"latin-1"</span>))</div></pre></td></tr></table></figure>
+</li>
+</ul>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/11/06/2017-03-07-字符编码与Python2/" data-id="cj9oc7cgt0000joh08ftojyhg" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="page-2016-12-28-[翻译]Why-sys.setdefaultencoding()-will-break-code" class="article article-type-page" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/11/06/2016-12-28-[翻译]Why-sys.setdefaultencoding()-will-break-code/" class="article-date">
+  <time datetime="2017-11-06T15:23:15.000Z" itemprop="datePublished">2017-11-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/tech/">tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/06/2016-12-28-[翻译]Why-sys.setdefaultencoding()-will-break-code/">为什么sys.setdefaultencoding()会破坏代码</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>================</p>
+<p><a href="https://anonbadger.wordpress.com/2015/06/16/why-sys-setdefaultencoding-will-break-code/#comment-977" target="_blank" rel="external">原文Why sys.setdefaultencoding() will break code</a></p>
+<p>我知道更聪明、更有经验的Python程序员之前已经向python-dev提了相关问题，但每次当我需要向别人引用其中一个时，我发现很难找得到。今天当我在Google上搜索这个问题时，发现最相关的条目是我自己在2011年发给yum-devel的一个<a href="http://lists.baseurl.org/pipermail/yum-devel/2011-March/008034.html" target="_blank" rel="external">帖子</a>。我知道以后我肯定有必要向别人证明不应该使用<code>setdefaultencoding()</code>方法，所以为了避免下次再去网络上搜索，我决定在这里发表我的论证。</p>
+<h2 id="一些背景"><a href="#一些背景" class="headerlink" title="一些背景"></a>一些背景</h2><h3 id="15年以前：支持Unicode的Python问世"><a href="#15年以前：支持Unicode的Python问世" class="headerlink" title="15年以前：支持Unicode的Python问世"></a>15年以前：支持Unicode的Python问世</h3><p>对Python2而言，一定程度下我们可以将字节串(str type)和字符串(unicode type)混为一谈，例如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">u'Toshio'</span> == <span class="string">'Toshio'</span></div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>print(<span class="string">u'Toshio'</span> + <span class="string">' Kuratomi'</span>)</div><div class="line">Toshio Kuratomi</div></pre></td></tr></table></figure>
+<p>当你执行这些操作时，Python发现一边是<code>unicode</code>类型，另一边是<code>str</code>类型，于是它取出<code>str</code>的值，将其解码成一个unicode类型，然后继续执行相应的操作。解析这些字节码的编码就是我们说的defaultencoding(根据<code>sys.getdefaultencoding()</code>命名，通过这个函数你可以查看当前的默认编码)。</p>
+<p>当Python开发者第一次试验与<code>str</code>截然不同的<code>unicode</code>字符串时，他们不确定defaultencoding应该设置成什么。因此他们创建了<code>sys.setdefaultencoding</code>方法，这个方法在Python程序启动时被调用以试验不同的defaultencoding值带来的不同影响。Python的作者们通过改变自己的<strong>site.py</strong>文件，观察设置不同的默认编码对代码行为的影响，从而获取更多经验。</p>
+<p>最终在2000年8月(写本文时已经过去了14年半)，上述的Python试验版本正式成为Python-2.0，它的作者们决定将这个敏感的配置defaultencoding设置成ascii。</p>
+<p>我知道今天再次去评价ascii的决定很容易，但是在14年以前字符编码风格比今天更混乱。新出现的编程语言和API已经针对unicode固定两个字节的编码规则进行了优化。但是针对特定自然语言的非unicode一字节编码在那时使用更加广泛。许多数据(甚至在今天)可以包含非ascii文本，而不去声明解码方式。在那个年代，任何游离ascii编码王国之外的人都需要被警醒：他们正进入一片编码恶魔肆意游荡的土地。ascii在许多跨越边界的情况下抛出错误，从而警告人们必须严加看管自己的代码。</p>
+<p>然而，在Python-2.0带来unicode功能的同时，Python的作者们却渐渐发现有一个疏忽带来了很不好的影响。这个疏忽便是他们没有删除<code>sys.setdefaultencoding()</code>这个方法。为了弥补这个疏漏，他们在site.py中删除了sys的这一属性，从而避免人们在初始化以外的地方使用<code>setdefaultencoding()</code>，但是他们仍然可以在自己的site.py中改变defaultencoding。</p>
+<h3 id="sys-setdefaultencoding-的滥用"><a href="#sys-setdefaultencoding-的滥用" class="headerlink" title="sys.setdefaultencoding()的滥用"></a>sys.setdefaultencoding()的滥用</h3><p>随着时间的推移，utf-8编码在Unix-like操作系统和网络传输中占据着统治地位。很多只需处理utf-8编码文本的人厌倦了字符串和字节串混在一起带来的错误。于是他们发现了<code>setdefaultencoding()</code>这根稻草，开始尝试用这种方式摆脱他们遇到的麻烦。</p>
+<p>起初，有能力的程序员通过更新Python安装的全局文件site.py来使用<code>setdefaultencoding ()</code>，这也是Python官方文档建议的用法，这只在用户自己的机器上有用。不幸的是，这些用户通常都是程序员，他们的程序需要在其他人的机器上运行，比如IT部门、客户以及遍布整个互联网的用户。这意味着更新site.py文件会使他们处于比以前更糟糕的境地：他们的代码在自己的机器上似乎工作良好，却在正真使用该软件的人那里运行奔溃。</p>
+<p>由于程序员的关注点仅限于别人能否使用他们的软件，所以他们认为如果自己的软件可以将设置默认编码作为其初始化的一部分，那事情就好办多了。他们不必再强迫别人修改自己的Python安装，因为他们的软件会在运行时做出决定。于是乎他们重新审视了一下<code>sys.setdefaultencoding()</code>这个方法。虽然Python的作者们尽最大努力让这个方法在python启动后不可用，但程序员还是想到了获取这个功能的妙方：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">import</span> sys</div><div class="line">reload(sys)</div><div class="line">sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div></pre></td></tr></table></figure>
+<p>一旦这段代码运行，强制字节串转换成字符串的的默认编码将变为utf-8。这意味着当utf-8编码的字节串与unicode字符串混合时，Python将成功地将str类型数据转换为unicode类型，并将它们合并成一个unicode字符串。 这就是新一代的程序员对于他们大部分数据所期待的样子，所以用这几行（不可否认非常的hack）代码解决问题的想法对他们来说非常有吸引力。 不幸的是，这样做有很明显的缺点。</p>
+<h2 id="为什么sys-setdefaultencoding-会破坏你的代码"><a href="#为什么sys-setdefaultencoding-会破坏你的代码" class="headerlink" title="为什么sys.setdefaultencoding()会破坏你的代码"></a>为什么sys.setdefaultencoding()会破坏你的代码</h2><h3 id="1-编写一次，改变一切"><a href="#1-编写一次，改变一切" class="headerlink" title="(1)编写一次，改变一切"></a>(1)编写一次，改变一切</h3><p><code>sys.setdefaultencoding()</code>带来的第一个问题乍一看不是很明显。当你使用这个方法时，即将运行的代码都将受到影响。你的代码，标准库的代码以及不受你管控的第三方代码都将在你设置的默认编码下运行。有些不是你负责的代码依赖的默认编码是ascii，此时它就不会抛出错误，很可能制造一些垃圾数据。比如，你依赖的第三方库有如下代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">welcome_message</span><span class="params">(byte_string)</span>:</span></div><div class="line">    <span class="keyword">try</span>:</div><div class="line">        <span class="keyword">return</span> <span class="string">u"%s runs your business"</span> % byte_string</div><div class="line">    <span class="keyword">except</span> UnicodeError:</div><div class="line">        <span class="keyword">return</span> <span class="string">u"%s runs your business"</span> % unicode(byte_string,</div><div class="line">            encoding=detect_encoding(byte_string))</div><div class="line"> </div><div class="line">print(welcome_message(<span class="string">u"Angstrom (Å®)"</span>.encode(<span class="string">"latin-1"</span>))</div></pre></td></tr></table></figure>
+<p>如果没有改变默认编码，这段代码将无法通过ascii解码”Å”，随后进入异常处理，猜测编码并将其正确的转换成unicode字符串，程序会打印出  <code>Angstrom (Å®) runs your business</code>。一旦你将defaultencoding设置为utf-8，代码将使用utf-8解码数据，打印<code>Angstrom (Ů) runs your business</code>。</p>
+<p>当然，如果这段代码是在你自己的软件中，你完全有能力去处理这个编码问题。但是你并不能对第三方库做这些事情。</p>
+<h3 id="2-我们正破坏字典"><a href="#2-我们正破坏字典" class="headerlink" title="(2)我们正破坏字典"></a>(2)我们正破坏字典</h3><p>设置utf-8为默认编码带来的最严重的问题是破坏了字典的一些行为约定。我们来看下面这段代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">key_in_dict</span><span class="params">(key, dictionary)</span>:</span></div><div class="line">    <span class="keyword">if</span> key <span class="keyword">in</span> dictionary:</div><div class="line">        <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">False</span></div><div class="line"> </div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">key_found_in_dict</span><span class="params">(key, dictionary)</span>:</span></div><div class="line">    <span class="keyword">for</span> dict_key <span class="keyword">in</span> dictionary:</div><div class="line">        <span class="keyword">if</span> dict_key == key:</div><div class="line">            <span class="keyword">return</span> <span class="keyword">True</span></div><div class="line">    <span class="keyword">return</span> <span class="keyword">False</span></div></pre></td></tr></table></figure>
+<p>你认为输入参数相同两个函数的输出会一致吗？在Python中，如果你没有滥用<code>sys.setdefaultencoding()</code>这个方法，那问题答案是肯定的。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># Note: the following is the same as d = &#123;'Café': 'test'&#125; on</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="comment"># systems with a utf-8 locale</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>d = &#123; <span class="string">u'Café'</span>.encode(<span class="string">'utf-8'</span>): <span class="string">'test'</span> &#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>key_in_dict(<span class="string">'Café'</span>, d)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>key_found_in_dict(<span class="string">'Café'</span>, d)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>key_in_dict(<span class="string">u'Café'</span>, d)</div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>key_found_in_dict(<span class="string">u'Café'</span>, d)</div><div class="line">__main__:<span class="number">1</span>: UnicodeWarning: Unicode equal comparison failed to convert both arguments to Unicode - interpreting them <span class="keyword">as</span> being unequal</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
+<p>但是如果我们使用<code>sys.setdefaultencoding(&#39;utf-8&#39;)</code> 又会发生什么呢？答案是上面的行为会遭到破坏：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> sys</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>reload(sys)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>sys.setdefaultencoding(<span class="string">'utf-8'</span>)</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>d = &#123; <span class="string">u'Café'</span>.encode(<span class="string">'utf-8'</span>): <span class="string">'test'</span> &#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>key_in_dict(<span class="string">'Café'</span>, d)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>key_found_in_dict(<span class="string">'Café'</span>, d)</div><div class="line"><span class="keyword">True</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>key_in_dict(<span class="string">u'Café'</span>, d)</div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span>key_found_in_dict(<span class="string">u'Café'</span>, d)</div><div class="line"><span class="keyword">True</span></div></pre></td></tr></table></figure>
+<p>在使用<code>in</code>操作时，程序计算key的hash值然后对比hash值是否相等。在utf-8编码下，只有在ascii编码体系里的字符串的unicode和str的hash值是相等的，其他的字符集下字符串的unicode和str的hash值是不相等的。<code>==</code>则会将字节串解码成unicode然后再比较二者。当你调用<code>sys.setdefaultencoding(&#39;utf-8&#39;)</code>后，你便允许字节串以utf-8的方式转换成unicode，然后两个字符串对比后发现相等。这样做的后果是<code>in</code>和<code>==</code>的测试产生了不同的结果，这与人们习惯的行为相差甚远，大多数人认为这打破了语言的基本约定。</p>
+<h3 id="所以Python-3是如何修复这个问题的呢？"><a href="#所以Python-3是如何修复这个问题的呢？" class="headerlink" title="所以Python 3是如何修复这个问题的呢？"></a>所以Python 3是如何修复这个问题的呢？</h3><p>你或许已经知道Python 3将默认编码从ascii转变成utf-8，那它如何避免<code>==</code>和<code>in</code>带来的问题呢？答案是Python 3不再进行字节串(python3 bytes type)和字符串(python3 str type)之间的隐式转码了。由于这两种类型现在是完全分离的，所以上文进行的“包含测试”和“相等测试”都会返回<code>False</code>：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div></pre></td><td class="code"><pre><div class="line">$ python3</div><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = &#123;<span class="string">'A'</span>: <span class="number">1</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">b'A'</span> <span class="keyword">in</span> a</div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="string">b'A'</span> == list(a.keys())[<span class="number">0</span>]</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
+<p>起初在Python 2中，ascii编码体系下字节串和字符串是相等的，这看起来有些滑稽。但是请记住字节串只是一种数字类型，下面的代码并不能像你期望的那样工作：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line"><span class="meta">&gt;&gt;&gt; </span>a = &#123;<span class="string">'1'</span>: <span class="string">'one'</span>&#125;</div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">1</span> <span class="keyword">in</span> a</div><div class="line"><span class="keyword">False</span></div><div class="line"><span class="meta">&gt;&gt;&gt; </span><span class="number">1</span> == list(a.keys())[<span class="number">0</span>]</div><div class="line"><span class="keyword">False</span></div></pre></td></tr></table></figure>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/11/06/2016-12-28-[翻译]Why-sys.setdefaultencoding()-will-break-code/" data-id="cj9oc7cgz0001joh0jnz49a1i" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="page-2017-01-05-Python-decorator-order-of-execution" class="article article-type-page" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/11/06/2017-01-05-Python-decorator-order-of-execution/" class="article-date">
+  <time datetime="2017-11-06T15:23:15.000Z" itemprop="datePublished">2017-11-06</time>
+</a>
+    
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/tech/">tech</a>
+  </div>
+
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/06/2017-01-05-Python-decorator-order-of-execution/">Python装饰器的执行顺序</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>================</p>
+<h2 id="引子"><a href="#引子" class="headerlink" title="引子"></a>引子</h2><p>之所以写这篇博客，是因为今天在写代码时遇到了<strong>装饰器顺序</strong>带来的问题。我用<code>Flask</code>写web后端，需要对一个view方法进行多次装饰，其中一个装饰器用到了另一个装饰器产生的上下文，这就需要那个被依赖的装饰器先执行。所以在编写有相互依赖的装饰器时，我们的确需要多加小心。</p>
+<h2 id="一些基础"><a href="#一些基础" class="headerlink" title="一些基础"></a>一些基础</h2><h3 id="1-它的原理"><a href="#1-它的原理" class="headerlink" title="1. 它的原理"></a>1. 它的原理</h3><p>装饰器是Python的语法糖，它可以帮助你写成简洁、易懂、优雅的代码。在Python中一切皆对象，我们来看下面这段代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'hello world'</span></div><div class="line"></div><div class="line">foo()</div><div class="line"><span class="comment"># output: hello world</span></div><div class="line"></div><div class="line">fn = foo</div><div class="line">type(fn)</div><div class="line"><span class="comment"># output: function</span></div><div class="line">fn()</div><div class="line"><span class="comment"># output: hello world</span></div></pre></td></tr></table></figure>
+<p>这里我们定义了函数<code>foo</code>，我们甚至可以将<code>foo</code>赋值给<code>fn</code>，然后调用<code>fn()</code>会和直接调用<code>foo()</code>产生同样的效果。</p>
+<p>闲话不说，我们继续看代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(func)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">()</span>:</span></div><div class="line">        <span class="keyword">print</span> <span class="string">'Do something before func.'</span></div><div class="line">        <span class="keyword">return</span> func()</div><div class="line">    <span class="keyword">return</span> wrapper  </div><div class="line"></div><div class="line"><span class="meta">@decorator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'hello world'</span></div><div class="line">    </div><div class="line">foo()</div><div class="line"><span class="comment"># output:</span></div><div class="line">Do something before func.</div><div class="line">hello world</div></pre></td></tr></table></figure>
+<p>我们看到，装饰器能够很容易地在调用被装饰函数之前做一些“<strong>其他有用的事情”</strong>。其实质就是公用代码的抽离，比如web后端的鉴权行为等。这样做的好处大概就是：</p>
+<ol>
+<li>提高公用代码的利用率</li>
+<li>优雅、易读、好维护</li>
+<li>防止无关代码侵入被装饰函数</li>
+</ol>
+<p>我们使用装饰器时，实际上发生了什么呢？</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(func)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">()</span>:</span></div><div class="line">        <span class="keyword">print</span> <span class="string">'Do something before func.'</span></div><div class="line">        <span class="keyword">return</span> func()</div><div class="line">    <span class="keyword">return</span> wrapper  </div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'hello world'</span></div><div class="line">    </div><div class="line">decorator(foo)()</div><div class="line"><span class="comment"># output:</span></div><div class="line">Do something before func.</div><div class="line">hello world</div></pre></td></tr></table></figure>
+<p>装饰器的写法只是一个语法糖，上面的代码才是正真的行为，其实就是把待装饰的函数作为参数传入装饰器，做一些其他的事再返回这个函数。</p>
+<h3 id="2-一些改进"><a href="#2-一些改进" class="headerlink" title="2. 一些改进"></a>2. 一些改进</h3><p>当我们单纯的用上面的方式写装饰器时，代码的行为可能并不能使我们满意，比如：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(func)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwds)</span>:</span></div><div class="line">        <span class="string">"""this is wrapper"""</span></div><div class="line">        <span class="keyword">return</span> func(*args, **kwds)</div><div class="line">    <span class="keyword">return</span> wrapper  </div><div class="line"></div><div class="line"><span class="meta">@decorator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""this is foo"""</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line">    </div><div class="line"><span class="keyword">print</span> foo.__name__</div><div class="line"><span class="comment"># output: wrapper</span></div><div class="line"><span class="keyword">print</span> foo.__doc__</div><div class="line"><span class="comment"># output: this is wrapper</span></div></pre></td></tr></table></figure>
+<p>我们的函数看起来明明是<code>foo</code>，但实际上已经被偷梁换柱了！这样的信息丢失不利于调试，我们自己看起来也很不爽。</p>
+<p>幸运的是，强大的Python提供了一个很有用的工具方法<code>functools.wraps</code>，这个方法能使包装函数<code>wrapper</code>看起来更像是被包装的函数。注意我的用词是“<strong>像</strong>”，说明通过<code>wraps</code>装饰，我们只是将func的一些元信息(metadata)赋给了<code>wrapper</code>，仅此而已！我们再对上述代码进行改进：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line"><span class="keyword">from</span> functools <span class="keyword">import</span> wraps</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">decorator</span><span class="params">(func)</span>:</span></div><div class="line"><span class="meta">    @wraps(func)</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwds)</span>:</span></div><div class="line">        <span class="string">"""this is wrapper"""</span></div><div class="line">        <span class="keyword">return</span> func(*args, **kwds)</div><div class="line">    <span class="keyword">return</span> wrapper  </div><div class="line"></div><div class="line"><span class="meta">@decorator</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">()</span>:</span></div><div class="line">    <span class="string">"""this is foo"""</span></div><div class="line">    <span class="keyword">pass</span></div><div class="line">    </div><div class="line"><span class="keyword">print</span> foo.__name__</div><div class="line"><span class="comment"># output: foo</span></div><div class="line"><span class="keyword">print</span> foo.__doc__</div><div class="line"><span class="comment"># output: this is foo</span></div></pre></td></tr></table></figure>
+<p>所以，这样使用装饰器才是正确的打开方式。</p>
+<h2 id="多装饰器的执行顺序"><a href="#多装饰器的执行顺序" class="headerlink" title="多装饰器的执行顺序"></a>多装饰器的执行顺序</h2><p>回到我们最初关心的问题—多装饰器的执行顺序。还是先看一段代码：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">first</span><span class="params">(func)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></div><div class="line">        <span class="keyword">print</span> <span class="string">'first decorator called.'</span></div><div class="line">        <span class="keyword">return</span> func(*args, **kwargs)</div><div class="line">    <span class="keyword">return</span> wrapper</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">second</span><span class="params">(func)</span>:</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></div><div class="line">        <span class="keyword">print</span> <span class="string">'second decorator called.'</span></div><div class="line">        <span class="keyword">return</span> func(*args, **kwargs)</div><div class="line">    <span class="keyword">return</span> wrapper</div><div class="line"></div><div class="line"><span class="meta">@first</span></div><div class="line"><span class="meta">@second</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">foo</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'foo called.'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">bar</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'bar called.'</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    foo()</div><div class="line">    <span class="keyword">print</span> <span class="string">'======================='</span></div><div class="line">    first(second(bar))()</div><div class="line"></div><div class="line"><span class="comment"># 运行结果</span></div><div class="line">first decorator called.</div><div class="line">second decorator called.</div><div class="line">foo called.</div><div class="line">=======================</div><div class="line">first decorator called.</div><div class="line">second decorator called.</div><div class="line">bar called.</div></pre></td></tr></table></figure>
+<p>可以看出，当多个装饰器装饰同一个函数时，从下往上，每个装饰器都只负责装饰它下面的函数。听起来可能会很绕，我们看例子，<code>foo</code>同时被<code>fisrt</code>和<code>second</code>装饰，则实际的行为是<code>first(second(foo))()</code>，<code>first</code>装饰的函数是<code>second</code>装饰<code>foo</code>后得到的结果。</p>
+<p>前面我们一直强调装饰器的作用就是做一些“<strong>其他有用的事情</strong>”，当有多个装饰器时，每一个都要做它自己“<strong>有用的事情</strong>”。在实际的开发中，这些“<strong>有用的事情</strong>”可能是相互依赖的，这时候如果我们搞不清楚放置装饰器的顺序，就会出现麻烦！</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div></pre></td><td class="code"><pre><div class="line">IS_LOGIN = <span class="keyword">False</span>   <span class="comment"># 判断登录状态</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">login_change</span><span class="params">(func)</span>:</span></div><div class="line"><span class="meta">    @wraps(func)</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></div><div class="line">        <span class="keyword">global</span> IS_LOGIN</div><div class="line">        IS_LOGIN = <span class="keyword">True</span></div><div class="line">        <span class="keyword">return</span> func(*args, **kwargs)</div><div class="line">    <span class="keyword">return</span> wrapper</div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">login_check</span><span class="params">(func)</span>:</span></div><div class="line"><span class="meta">    @wraps(func)</span></div><div class="line">    <span class="function"><span class="keyword">def</span> <span class="title">wrapper</span><span class="params">(*args, **kwargs)</span>:</span></div><div class="line">        <span class="keyword">if</span> <span class="keyword">not</span> IS_LOGIN:</div><div class="line">            <span class="keyword">return</span> unauth()</div><div class="line">        <span class="keyword">return</span> func(*args, **kwargs)</div><div class="line">    <span class="keyword">return</span> wrapper</div><div class="line"></div><div class="line"><span class="meta">@login_change</span></div><div class="line"><span class="meta">@login_check</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">view1</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'view1 called'</span></div><div class="line"></div><div class="line"><span class="meta">@login_check</span></div><div class="line"><span class="meta">@login_change</span></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">view2</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'view2 called'</span></div><div class="line"></div><div class="line"><span class="function"><span class="keyword">def</span> <span class="title">unauth</span><span class="params">()</span>:</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'unauth called'</span></div><div class="line"></div><div class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</div><div class="line">    view1()</div><div class="line">    IS_LOGIN = <span class="keyword">False</span>  <span class="comment"># reset login state</span></div><div class="line">    <span class="keyword">print</span> <span class="string">'======================='</span></div><div class="line">    view2()</div><div class="line">    </div><div class="line"><span class="comment"># 执行结果</span></div><div class="line">view1 called</div><div class="line">=======================</div><div class="line">unauth called</div></pre></td></tr></table></figure>
+<p>上面我简单模拟了web后端处理登录认证的流程，全局变量<code>IS_LOGIN</code>代表登录状态，装饰器<code>login_change</code>做的“<strong>事情</strong>”是将<code>IS_LOGIN</code>置为<code>True</code>，装饰器<code>login_check</code>做的“<strong>事情</strong>”是检查登录状态，如果未登录转到<code>unauth</code>，否则放行到相应的<code>view</code>。显然这两个装饰器做的“<strong>事情</strong>”是相互影响的，它们的顺序也就变得至关重要了，<code>view1</code>和<code>view2</code>不同的执行结果就是最有力的证明。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>装饰器是Python最实用的语法糖之一。使用装饰器能使我们的代码变得优雅、易读，结构清晰。但如果我们想正确使用它，就必须理解它的本质，尤其在多装饰器环境下，有些上下文的处理不当会带来意想不到的后果。所以当你在写这类程序时，一定要把<strong>顺序</strong>放在心上！</p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/11/06/2017-01-05-Python-decorator-order-of-execution/" data-id="cj9oc7ch70003joh022ygj9il" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-meta">
+    <a href="/2017/11/06/hello-world/" class="article-date">
+  <time datetime="2017-11-06T15:16:02.000Z" itemprop="datePublished">2017-11-06</time>
+</a>
+    
+  </div>
+  <div class="article-inner">
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2017/11/06/hello-world/">Hello World</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="external">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="external">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="external">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="external">GitHub</a>.</p>
+<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo new <span class="string">"My New Post"</span></div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="external">Writing</a></p>
+<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo server</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="external">Server</a></p>
+<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo generate</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="external">Generating</a></p>
+<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">$ hexo deploy</div></pre></td></tr></table></figure>
+<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="external">Deployment</a></p>
+
+      
+    </div>
+    <footer class="article-footer">
+      <a data-url="http://yoursite.com/2017/11/06/hello-world/" data-id="cj9obyrl50000avh0kevolefj" class="article-share-link">Share</a>
+      
+      
+    </footer>
+  </div>
+  
+</article>
+
+
+  
+
+</section>
+        
+          <aside id="sidebar">
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Categories</h3>
+    <div class="widget">
+      <ul class="category-list"><li class="category-list-item"><a class="category-list-link" href="/categories/tech/">tech</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+
+  
+    
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Archives</h3>
+    <div class="widget">
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2017/11/">November 2017</a></li></ul>
+    </div>
+  </div>
+
+
+  
+    
+  <div class="widget-wrap">
+    <h3 class="widget-title">Recent Posts</h3>
+    <div class="widget">
+      <ul>
+        
+          <li>
+            <a href="/2017/11/06/2017-03-07-字符编码与Python2/">字符编码与Python2</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/06/2016-12-28-[翻译]Why-sys.setdefaultencoding()-will-break-code/">为什么sys.setdefaultencoding()会破坏代码</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/06/2017-01-05-Python-decorator-order-of-execution/">Python装饰器的执行顺序</a>
+          </li>
+        
+          <li>
+            <a href="/2017/11/06/hello-world/">Hello World</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+  
+</aside>
+        
+      </div>
+      <footer id="footer">
+  
+  <div class="outer">
+    <div id="footer-info" class="inner">
+      &copy; 2017 mec<br>
+      Powered by <a href="http://hexo.io/" target="_blank">Hexo</a>
+    </div>
+  </div>
+</footer>
+    </div>
+    <nav id="mobile-nav">
+  
+    <a href="/" class="mobile-nav-link">Home</a>
+  
+    <a href="/archives" class="mobile-nav-link">Archives</a>
+  
+</nav>
+    
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.3/jquery.min.js"></script>
+
+
+  <link rel="stylesheet" href="/fancybox/jquery.fancybox.css">
+  <script src="/fancybox/jquery.fancybox.pack.js"></script>
+
+
+<script src="/js/script.js"></script>
+
+  </div>
+</body>
+</html>
